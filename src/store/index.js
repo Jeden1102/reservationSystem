@@ -4,25 +4,53 @@ const store = new Vuex.Store({
     state:{
         userId:null,
         userInfo:null,
+        companyInfo:null,
     },
     getters:{},
     actions:{
         loginUser({commit,state}){
-            axios.get(`${import.meta.env.VITE_API_URL}user/${state.userId}`).then(res=>{
-                commit("setProfileInfo",res.data);
-                localStorage.removeItem('user');
-                localStorage.setItem('user',JSON.stringify(res.data))
-                state.userInfo = res.data
-            })
+            let token = $cookies.get("token");
+            if(token){
+                axios.get(`${import.meta.env.VITE_API_URL}getUserByToken/${token}`).then(res=>{
+                    commit("setProfileInfo",res.data);
+                    if(res.data[0].isManager){
+                        axios.get(`${import.meta.env.VITE_API_URL}companyByUser/${res.data[0].id}`).then(res=>{
+                            console.log(res)
+                            commit("setCompanyInfo",res.data)
+                        }).catch(err=>{
+                            console.log(res)
+                        })
+                    }
+                    state.userInfo = res.data
+                })
+            }
         },
         getCurrentUser({commit,state}){
-            commit("setProfileInfo",JSON.parse(localStorage.getItem('user')))
+            let token = $cookies.get("token");
+            if(token){
+                axios.get(`${import.meta.env.VITE_API_URL}getUserByToken/${token}`).then(res=>{
+                    commit("setProfileInfo",res.data);
+                    if(res.data[0].isManager){
+                        axios.get(`${import.meta.env.VITE_API_URL}companyByUser/${res.data[0].id}`).then(res=>{
+                            console.log(res)
+                            commit("setCompanyInfo",res.data)
+                        }).catch(err=>{
+                            console.log(res)
+                        })
+                    }
+                    state.userInfo = res.data
+                })
+            }
         },
     },
     mutations:{
         setProfileInfo(state,doc){
             state.userInfo = null;
             state.userInfo = doc;
+        },
+        setCompanyInfo(state,doc){
+            state.companyInfo = null;
+            state.companyInfo = doc;
         },
     },
     modules:{},

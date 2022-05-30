@@ -139,9 +139,9 @@ export default {
       console.log(`${import.meta.env.VITE_API_URL}userLogin`)
       if(this.validateLogin()){
         axios.post(`${import.meta.env.VITE_API_URL}userLogin`,this.loginForm).then(res=>{
-          console.log(res);
+          console.log(res.data.user[0].remember_token);
+          $cookies.set("token",res.data.user[0].remember_token)
           this.$router.push({name:'Profile'})
-          localStorage.setItem('user',JSON.stringify(res.data.user))
           this.$store.dispatch('getCurrentUser');
         }).catch(err=>{
           this.errors = [];
@@ -168,7 +168,7 @@ export default {
          this.registerForm
         ).then(res=>{
           console.log(res);
-          this.$store.state.userId = res.data.id;
+          $cookies.set("token",res.data.remember_token)
           this.$store.dispatch("loginUser")
           this.$router.push({name:'Profile'})
         }).catch(err=>{
@@ -189,8 +189,8 @@ export default {
       if(this.validateLoginBusiness()){
           axios.post(`${import.meta.env.VITE_API_URL}userLogin`,this.loginBusinessForm).then(res=>{
           console.log(res);
-          this.$router.push({name:'Profile'})
-          localStorage.setItem('user',JSON.stringify(res.data.user))
+          $cookies.set("token",res.data.user[0].remember_token)
+          this.$router.push({name:'AdminPanel'})
           this.$store.dispatch('getCurrentUser');
         }).catch(err=>{
           this.errors = [];

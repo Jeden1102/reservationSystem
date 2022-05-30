@@ -17,14 +17,15 @@
         </button>
       </div>
       <div class="flex-1 flex items-center justify-center  sm:items-stretch sm:justify-start">
-        <div class="flex-shrink-0 flex items-center  justify-center">
-          <img class="w-40" src="/src/assets/logo.png" alt="">
+        <div v-if="companyInfo" class="flex-shrink-0 flex items-center  justify-center">
+            <router-link :to="{name:'AdminPanel'}"><img class="h-16" :src="`${serverUrl}upload/${companyInfo[0].logo_url}`" alt=""></router-link>
         </div>
         <div class="hidden sm:block sm:ml-6 ">
           <div class="flex space-x-4 items-center justify-center  h-full">
-            <router-link class="text-black px-3 py-2 rounded-md text-sm font-medium r-link" aria-current="page" :to="{name:'Home'}">Home</router-link>
-            <router-link class="text-black px-3 py-2 rounded-md text-sm font-medium r-link" aria-current="page" :to="{name:'Services'}">For customers</router-link>
-            <router-link class="text-black px-3 py-2 rounded-md text-sm font-medium r-link" aria-current="page" :to="{name:'ForMenagers'}">For menagers</router-link>
+            <router-link class="text-black px-3 py-2 rounded-md text-sm font-medium r-link" aria-current="page" :to="{name:'BusinessDetails'}">Business Details</router-link>
+            <router-link class="text-black px-3 py-2 rounded-md text-sm font-medium r-link" aria-current="page" :to="{name:'Calendar'}">Calendar</router-link>
+            <router-link class="text-black px-3 py-2 rounded-md text-sm font-medium r-link" aria-current="page" :to="{name:'WorkHours'}">Work hours</router-link>
+            <router-link class="text-black px-3 py-2 rounded-md text-sm font-medium r-link" aria-current="page" :to="{name:'ServicesAdmin'}">Services</router-link>
           </div>
         </div>
       </div>
@@ -39,16 +40,11 @@
         </router-link>
         <div v-else>
           <div>
-            <button @click="openendSubMenu = !openendSubMenu" type="button" class="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-              <span class="sr-only">Open user menu</span>
-              <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-            </button>
+            <n-button @click="logout" type="primary" class="bg-green-600">
+            Logout
+            </n-button>
           </div>
-        <div v-if="openendSubMenu" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-            <!-- Active: "bg-gray-100", Not Active: "" -->
-            <router-link class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0" :to="{name:'Profile'}">Profile</router-link>
-            <a @click="logout" href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
-          </div>
+
         </div>
 
       </div>
@@ -67,20 +63,37 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
     export default {
+        computed: {
+            ...mapState([
+                'companyInfo',
+            ])
+        },
         data() {
             return {
                 openendSubMenu:false,
                 openMobileMenu:false,
+                userInfo : this.$store.state.userInfo,
+                serverUrl : import.meta.env.VITE_SERVER_URL
             }
         },
         methods: {
           logout(){
             if(this.$route.meta.admin)
-              this.$router.push({name:'Home'})
+                this.$router.push({name:'Home'})
             this.$store.state.userInfo = null;
             $cookies.remove('token')
-          }
+          },
+        getCompanyInfo(){
+                axios.get(`${import.meta.env.VITE_API_URL}companyByUser/${this.$store.state.userInfo[0].id}`).then(res=>{
+                    console.log(res)
+                    this.companyInfo = res.data;
+                }).catch(err=>{
+                    console.log(res)
+                })
+            }
         },
     }
 </script>

@@ -3,18 +3,27 @@
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import HelloWorld from './components/HelloWorld.vue'
 import MyNavigation from './components/MyNavigation.vue'
+import AdminNavigation from './components/AdminNavigation.vue'
     export default {
-        mounted() {
+        beforeCreate() {
+          console.log('tak')
             this.$store.dispatch("getCurrentUser")
         },
+        computed:{
+          checkIfAdmin(){
+            return this.$route.meta.admin
+          }
+        },
         components:{
-          MyNavigation
+          MyNavigation,
+          AdminNavigation
         }
     }
 </script>
 
 <template>
-<MyNavigation/>
+<MyNavigation v-if="!checkIfAdmin"/>
+<AdminNavigation v-else/>
 <div class="bg-gray-50  w-full h-full">
 <router-view class="mx-auto"></router-view>
 </div>

@@ -1,13 +1,32 @@
 <template>
     <div>
         Profile
-        {{ $store.state.userInfo }}
+        {{ userInfo }}
+        {{ $cookies.get("token") }}
     </div>
 </template>
 
 <script>
-    export default {
+import { mapState } from 'vuex';
 
+    export default {
+        computed: {
+            ...mapState([
+                'userInfo',
+            ])
+        },
+        data() {
+            return {
+            }
+        },
+        mounted() {
+            this.getToken();
+        },
+        methods: {
+            getToken(){
+                console.log($cookies.get("token"))
+            }
+        },
     }
 </script>
 

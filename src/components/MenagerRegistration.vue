@@ -20,11 +20,18 @@
                 <label for="">Businnes Description</label>
                 <n-input  type="textarea" maxlength="300" show-count v-model:value="businnesForm.desc"/>
                 <label for="">Business logo</label>
-                
-                <n-upload
+                <div class="input-group">
+<div class="custom-file">
+<input type="file" name="filename" class="custom-file-input" id="inputFileUpload"
+v-on:change="onFileChange">
+<label class="custom-file-label" for="inputFileUpload">Choose file</label>
+</div>
+                </div>
+                <!-- <n-upload
                     multiple
                     directory-dnd
                     v-model:value="businnesForm.image"
+                    @change="onFileChange"
                 >
                     <n-upload-dragger>
                     <div style="margin-bottom: 12px">
@@ -38,7 +45,7 @@
                         your bank card PIN or your credit card expiry date.
                     </n-p>
                     </n-upload-dragger>
-                </n-upload>
+                </n-upload> -->
             <n-alert v-if="errorsFirstStep.length>0" title="Error" class="mb-2" type="error">
             <p v-for="error in errorsFirstStep">{{error}}</p>
             </n-alert>
@@ -80,6 +87,8 @@
             Finish
             </n-button>
         </div>
+        xyz
+        {{ file }}
     </div>
 </template>
 
@@ -124,12 +133,16 @@ import axios from 'axios'
                     street:'',
                     streetNumber:'',
                     category:'',
+                    file:null,
                 },
                 errorsFirstStep:[],
                 errorsSecondStep:[],
             }
         },
         methods: {
+            onFileChange(e) {
+            this.businnesForm.file = e.target.files[0];
+            },
             validateFirstStep(){
                 this.errorsFirstStep=[];
                 console.log(this.businnesForm.image)
@@ -164,12 +177,15 @@ import axios from 'axios'
                 this.currentStep--;
             },
             registerCompany(){
-                axios.post("http://localhost:8000/api/company",this.businnesForm).then(res=>{
-                    localStorage.removeItem('user');
-                    localStorage.setItem('user',JSON.stringify(res.data))
-                    this.$store.dispatch("getCurrentUser")
-                    this.$router.push({name:'AdminPanel'});
-                    console.log(res)
+                const config = {
+                headers: {
+                'content-type': 'multipart/form-data',
+                }
+                }
+                axios.post("http://localhost:8000/api/company",this.businnesForm,config).then(res=>{
+                $cookies.set("token",res.data.remember_token)
+                this.$store.dispatch("loginUser")
+                this.$router.push({name:'AdminPanel'})
                 }).catch(err=>{
                     console.log(err);
                 })

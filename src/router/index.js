@@ -6,7 +6,12 @@ import  Home from '../views/Home.vue';
 import  Services from '../views/Services.vue';
 import  ForMenagers from '../views/ForMenagers.vue';
 import  Profile from '../views/Profile.vue';
+//admin
 import  AdminPanel from '../views/AdminPanel.vue';
+import  BusinessDetails from '../views/AdminViews/BusinessDetails.vue';
+import  CalendarView from '../views/AdminViews/CalendarView.vue';
+import  WorkHours from '../views/AdminViews/WorkHours.vue';
+import  ServicesAdmin from '../views/AdminViews/Services.vue';
 const routes = [
     {
         path:'/',
@@ -43,10 +48,46 @@ const routes = [
         name:"Profile",
         component:Profile
     },
+    //ADMIN
     {
         path:'/AdminPanel',
         name:"AdminPanel",
-        component:AdminPanel
+        component:AdminPanel,
+        meta:{
+            admin:true,
+        }
+    },
+    {
+        path:'/BusinessDetails',
+        name:"BusinessDetails",
+        component:BusinessDetails,
+        meta:{
+            admin:true,
+        }
+    },
+    {
+        path:'/Calendar',
+        name:"Calendar",
+        component:CalendarView,
+        meta:{
+            admin:true,
+        }
+    },
+    {
+        path:'/WorkHours',
+        name:"WorkHours",
+        component:WorkHours,
+        meta:{
+            admin:true,
+        }
+    },
+    {
+        path:'/ServicesAdmin',
+        name:"ServicesAdmin",
+        component:ServicesAdmin,
+        meta:{
+            admin:true,
+        }
     },
 ];
 
