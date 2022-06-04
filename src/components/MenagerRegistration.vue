@@ -198,7 +198,7 @@ import axios from 'axios'
                 'content-type': 'multipart/form-data',
                 }
                 }
-                axios.post(`${import.meta.env.VITE_API_URL}/company`,this.businnesForm,config).then(res=>{
+                axios.post(`${import.meta.env.VITE_API_URL}company`,this.businnesForm,config).then(res=>{
                 $cookies.set("token",res.data.remember_token)
                 this.$store.dispatch("loginUser")
                 this.$router.push({name:'AdminPanel'})
