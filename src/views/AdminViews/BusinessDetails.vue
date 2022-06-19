@@ -44,10 +44,17 @@
                 {{ success[0] }}
                 </n-alert>
           </n-card>
-
+{{ companyInfoCopy[0] }}
       </n-tab-pane>
       <n-tab-pane name="Business details" tab="Business details">
-        Business details
+                <label for="">Businness address</label>
+                <n-input placeholder="New York" v-model:value="companyInfoCopy[0].address" clearable />
+                <label for="">Businness street</label>
+                <n-input placeholder="New York" v-model:value="companyInfoCopy[0].street" clearable />
+                <label for="">Businness street number</label>
+                <n-input placeholder="New York" v-model:value="companyInfoCopy[0].number" clearable />
+                <label for="">Business category</label>
+                <n-select  :options="options" v-model:value="test"/>
       </n-tab-pane>
       <n-tab-pane name="Danger zone" tab="Danger zone">
             <n-card class="flex flex-row items-start justify-start my-2">
@@ -105,6 +112,34 @@ import { mapState } from 'vuex';
                 oldPwd:'',
                 newPwd:'',
                 newPwdRepeat:'',
+                address:'',
+                street:'',
+                streetNumber:'',
+                category:'',
+                test:"Barber",
+                options:[
+                    {
+                        label:"Barber",
+                        value:"Barber"
+                    },
+                    {
+                        label:"Hairdresser",
+                        value:"Hairdresser"
+                    },
+                    {
+                        label:"Gym",
+                        value:"Gym"
+                    },
+                    {
+                        label:"Dentist",
+                        value:"Dentist"
+                    },
+                    {
+                        label:"Other",
+                        value:"Other"
+                    },
+                    
+                ],
                 showModal:false,
                 error:[],
                 success:[],
@@ -117,7 +152,10 @@ import { mapState } from 'vuex';
             ]),
             userInfoCopy(){
                 return this.userInfo
-            }
+            },
+            companyInfoCopy(){
+                return this.companyInfo
+            },
         },
         methods: {
             changeEmail(){
